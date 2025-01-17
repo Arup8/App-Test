@@ -10,7 +10,7 @@ import {
   StyleSheet
 } from 'react-native';
 // import { styles } from '../../styles/auth';
-import { commonStyles } from '../../src/styles/common';
+import { commonStyles } from '../../styles/common';
 
 const SignUp = ({ navigation }) => {
   const [formData, setFormData] = useState({

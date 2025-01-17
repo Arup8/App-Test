@@ -8,7 +8,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateQuantity, removeFromCart } from '../src/store/slices/cartSlice';
+import { updateQuantity, removeFromCart } from '../store/slices/cartSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const Cart = () => {

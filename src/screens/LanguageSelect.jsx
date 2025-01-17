@@ -7,7 +7,7 @@ import {
   FlatList,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
-import { setLanguage } from '../src/store/slices/languageSlice';
+import { setLanguage } from '../store/slices/languageSlice';
 const languages = [
   { id: 'en', name: 'English', localName: 'English' },
   { id: 'hi', name: 'Hindi', localName: 'हिंदी' },
