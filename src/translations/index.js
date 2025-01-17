@@ -1,0 +1,48 @@
+export const translations = {
+    en: {
+      home: 'Home',
+      orders: 'Orders',
+      cart: 'Cart',
+      profile: 'Profile',
+      cartEmpty: 'Your cart is empty',
+      subtotal: 'Subtotal',
+      delivery: 'Delivery',
+      total: 'Total',
+      checkout: 'Proceed to Checkout',
+      // Add more translations
+    },
+    hi: {
+      home: 'होम',
+      orders: 'ऑर्डर',
+      cart: 'कार्ट',
+      profile: 'प्रोफाइल',
+      cartEmpty: 'आपकी कार्ट खाली है',
+      subtotal: 'सब टोटल',
+      delivery: 'डिलीवरी',
+      total: 'कुल',
+      checkout: 'चेकआउट करें',
+    },
+    te: {
+      home: 'హోమ్',
+      orders: 'ఆర్డర్స్',
+      cart: 'కార్ట్',
+      profile: 'ప్రొఫైల్',
+      cartEmpty: 'మీ కార్ట్ ఖాళీగా ఉంది',
+      subtotal: 'సబ్ టోటల్',
+      delivery: 'డెలివరీ',
+      total: 'మొత్తం',
+      checkout: 'చెక్అవుట్ చేయండి',
+    },
+    bn: {
+      home: 'হোম',
+      orders: 'অর্ডার',
+      cart: 'কার্ট',
+      profile: 'প্রোফাইল',
+      cartEmpty: 'আপনার কার্ট খালি',
+      subtotal: 'সাব টোটাল',
+      delivery: 'ডেলিভারি',
+      total: 'মোট',
+      checkout: 'চেকআউট',
+    },
+    // Add more languages
+  };
