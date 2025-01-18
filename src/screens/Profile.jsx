@@ -13,7 +13,7 @@ const Profile = ({ navigation }) => {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Image
-          source={require('../../assets/avatar-placeholder.png')}
+          source={require('../assets/avatar-placeholder.png')}
           style={styles.avatar}
         />
         <Text style={styles.name}>John Doe</Text>

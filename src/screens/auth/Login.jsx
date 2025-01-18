@@ -20,7 +20,7 @@ const Login = ({ navigation }) => {
       style={styles.container}>
       <View style={styles.content}>
         <Image
-          source={require('../../../assets/logo.png')}
+          source={require('../../assets/logo.png')}
           style={styles.logo}
         />
         
