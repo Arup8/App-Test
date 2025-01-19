@@ -76,6 +76,7 @@ const ProductList = ({ navigation }) => {
         renderItem={renderItem}
         keyExtractor={item => item.id}
         contentContainerStyle={styles.productList}
+        numColumns={2}
       />
     </SafeAreaView>
   );
@@ -90,12 +91,11 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   productList: {
-    padding: 16,
+    padding: 8,
   },
   productCard: {
-    flexDirection: 'row',
-    padding: 12,
-    marginBottom: 16,
+    flex: 1,
+    margin: 8,
     borderRadius: 8,
     borderWidth: 1,
     elevation: 2,
@@ -108,26 +108,26 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
   },
   productImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
+    width: '100%',
+    height: 120,
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+    resizeMode: 'cover',
   },
   productInfo: {
-    flex: 1,
-    marginLeft: 12,
-    justifyContent: 'center',
+    padding: 8,
   },
   productName: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 4,
   },
   farmerName: {
-    fontSize: 14,
+    fontSize: 12,
     marginBottom: 4,
   },
   price: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });

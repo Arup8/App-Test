@@ -8,10 +8,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
+import { useSelector } from 'react-redux';
 
 const ProductDetail = ({ route, navigation }) => {
   const { product } = route.params;
   const { colors } = useTheme();
+  const translations = useSelector((state) => state.language.translations);
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -25,11 +27,11 @@ const ProductDetail = ({ route, navigation }) => {
         
         <View style={styles.priceContainer}>
           <View>
-            <Text style={[styles.priceLabel, { color: colors.text }]}>Market Price</Text>
+            <Text style={[styles.priceLabel, { color: colors.text }]}>{translations.marketPrice}</Text>
             <Text style={[styles.price, { color: colors.primary }]}>{product.price}</Text>
           </View>
           <View>
-            <Text style={[styles.priceLabel, { color: colors.text }]}>Base Price</Text>
+            <Text style={[styles.priceLabel, { color: colors.text }]}>{translations.basePrice}</Text>
             <Text style={[styles.basePrice, { color: colors.primary }]}>{product.basePrice}</Text>
           </View>
         </View>
@@ -37,11 +39,11 @@ const ProductDetail = ({ route, navigation }) => {
         <TouchableOpacity
           style={[styles.negotiateButton, { backgroundColor: colors.primary }]}
           onPress={() => navigation.navigate('NegotiationScreen', { product })}>
-          <Text style={styles.negotiateButtonText}>Negotiate Price</Text>
+          <Text style={styles.negotiateButtonText}>{translations.startNegotiation}</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.buyButton, { backgroundColor: colors.primary }]}>
-          <Text style={styles.buyButtonText}>Buy Now</Text>
+          <Text style={styles.buyButtonText}>{translations.buyNow}</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>

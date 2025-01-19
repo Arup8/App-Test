@@ -19,6 +19,8 @@ export const translations = {
     farmerDetails: 'Farmer Details',
     basePrice: 'Base Price',
     currentPrice: 'Current Price',
+    buyNow: 'Buy Now',
+    marketPrice: 'Market Price',
     
     // Cart
     cartEmpty: 'Your cart is empty',
@@ -73,6 +75,8 @@ export const translations = {
     farmerDetails: 'किसान की जानकारी',
     basePrice: 'बेस प्राइस',
     currentPrice: 'वर्तमान कीमत',
+    buyNow: 'खरीदें',
+    marketPrice: 'मार्केट प्राइस',
     
     // Cart
     cartEmpty: 'आपकी कार्ट खाली है',
@@ -125,8 +129,10 @@ export const translations = {
     addToCartCaps: 'কার্টে যোগ করুন',
     description: 'বিবরণ',
     farmerDetails: 'কৃষকের বিবরণ',
-    basePrice: 'বেস প্রাইস',
+    basePrice: 'বেস দাম',
     currentPrice: 'বর্তমান দাম',
+    buyNow: 'ক্রয় করুন',
+    marketPrice: 'মার্কেট দাম',
     
     // Cart
     cartEmpty: 'আপনার কার্ট খালি',
