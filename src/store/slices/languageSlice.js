@@ -11,11 +11,16 @@ const languageSlice = createSlice({
   initialState,
   reducers: {
     setLanguage: (state, action) => {
-      state.selectedLanguage = action.payload;
-      state.translations = translations[action.payload];
+      const langCode = action.payload;
+      if (translations[langCode]) {
+        state.selectedLanguage = langCode;
+        state.translations = translations[langCode];
+      } else {
+        console.warn(`Translation not found for language code: ${langCode}`);
+      }
     },
   },
 });
 
-export const { setLanguage, setTranslations } = languageSlice.actions;
+export const { setLanguage } = languageSlice.actions;
 export default languageSlice.reducer;

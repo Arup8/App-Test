@@ -7,10 +7,12 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  StyleSheet
+  StyleSheet,
+  Image,
+  Switch,
 } from 'react-native';
-// import { styles } from '../../styles/auth';
 import { commonStyles } from '../../styles/common';
+import { useTheme } from '../../context/ThemeContext';
 
 const SignUp = ({ navigation }) => {
   const [formData, setFormData] = useState({
@@ -21,6 +23,7 @@ const SignUp = ({ navigation }) => {
     pincode: '',
   });
   const [errors, setErrors] = useState({});
+  const { colors, isDarkMode, toggleTheme } = useTheme();
 
   const handleSignUp = () => {
     // Basic validation
@@ -41,38 +44,72 @@ const SignUp = ({ navigation }) => {
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}>
+      style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Create Account</Text>
+        <Image
+          source={require('../../assets/logo.png')}
+          style={styles.logo}
+        />
+        <Text style={[styles.title, { color: colors.text }]}>Create Account</Text>
+
+        <View style={styles.themeToggle}>
+          <Text style={[styles.themeText, { color: colors.text }]}>Dark Mode</Text>
+          <Switch
+            value={isDarkMode}
+            onValueChange={toggleTheme}
+            trackColor={{ false: "#767577", true: "#4CAF50" }}
+            thumbColor={isDarkMode ? "#fff" : "#f4f3f4"}
+          />
+        </View>
 
         <TextInput
-          style={[commonStyles.input, errors.name && commonStyles.inputError]}
-          placeholder="Full Name"
+          style={[styles.input, { 
+            backgroundColor: colors.inputBackground,
+            color: colors.inputText,
+            borderColor: errors.name ? colors.error : colors.border 
+          }]}
+          placeholder="Enter your full name"
+          placeholderTextColor={colors.placeholderText}
           value={formData.name}
           onChangeText={(text) => setFormData({ ...formData, name: text })}
         />
-        {errors.name && <Text style={commonStyles.errorText}>{errors.name}</Text>}
+        {errors.name && <Text style={[styles.errorText, { color: colors.error }]}>{errors.name}</Text>}
 
         <TextInput
-          style={[commonStyles.input, errors.phone && commonStyles.inputError]}
-          placeholder="Phone Number"
+          style={[styles.input, { 
+            backgroundColor: colors.inputBackground,
+            color: colors.inputText,
+            borderColor: errors.phone ? colors.error : colors.border 
+          }]}
+          placeholder="Enter your phone number (e.g., 1234567890)"
+          placeholderTextColor={colors.placeholderText}
           keyboardType="phone-pad"
           value={formData.phone}
           onChangeText={(text) => setFormData({ ...formData, phone: text })}
         />
-        {errors.phone && <Text style={commonStyles.errorText}>{errors.phone}</Text>}
+        {errors.phone && <Text style={[styles.errorText, { color: colors.error }]}>{errors.phone}</Text>}
 
         <TextInput
-          style={commonStyles.input}
-          placeholder="Email (Optional)"
+          style={[styles.input, { 
+            backgroundColor: colors.inputBackground,
+            color: colors.inputText,
+            borderColor: colors.border 
+          }]}
+          placeholder="Enter your email address (optional)"
+          placeholderTextColor={colors.placeholderText}
           keyboardType="email-address"
           value={formData.email}
           onChangeText={(text) => setFormData({ ...formData, email: text })}
         />
 
         <TextInput
-          style={commonStyles.input}
-          placeholder="Address"
+          style={[styles.input, { 
+            backgroundColor: colors.inputBackground,
+            color: colors.inputText,
+            borderColor: colors.border 
+          }]}
+          placeholder="Enter your full address"
+          placeholderTextColor={colors.placeholderText}
           multiline
           numberOfLines={3}
           value={formData.address}
@@ -80,20 +117,29 @@ const SignUp = ({ navigation }) => {
         />
 
         <TextInput
-          style={[commonStyles.input, errors.pincode && commonStyles.inputError]}
-          placeholder="Pincode"
-          keyboardType="numeric"
+          style={[styles.input, { 
+            backgroundColor: colors.inputBackground,
+            color: colors.inputText,
+            borderColor: errors.pincode ? colors.error : colors.border 
+          }]}
+          placeholder="Enter your 6-digit pincode"
+          placeholderTextColor={colors.placeholderText}
+          keyboardType="number-pad"
           value={formData.pincode}
           onChangeText={(text) => setFormData({ ...formData, pincode: text })}
         />
-        {errors.pincode && <Text style={commonStyles.errorText}>{errors.pincode}</Text>}
+        {errors.pincode && <Text style={[styles.errorText, { color: colors.error }]}>{errors.pincode}</Text>}
 
-        <TouchableOpacity style={commonStyles.button} onPress={handleSignUp}>
-          <Text style={commonStyles.buttonText}>Sign Up</Text>
+        <TouchableOpacity 
+          style={[styles.loginButton, { backgroundColor: colors.primary }]}
+          onPress={handleSignUp}>
+          <Text style={styles.loginButtonText}>Sign Up</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.signupText}>Already have an account? Login</Text>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={[styles.signupText, { color: colors.text }]}>
+            Already have an account? Login
+          </Text>
         </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -101,62 +147,64 @@ const SignUp = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-      },
-      content: {
-        flex: 1,
-        padding: 20,
-        justifyContent: 'center',
-        alignItems: 'center',
-      },
-      logo: {
-        width: 120,
-        height: 120,
-        marginBottom: 40,
-      },
-      title: {
-        fontSize: 28,
-        fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 30,
-      },
-      input: {
-        width: '100%',
-        height: 50,
-        borderWidth: 1,
-        borderColor: '#ddd',
-        borderRadius: 8,
-        paddingHorizontal: 15,
-        fontSize: 16,
-        marginBottom: 15,
-        backgroundColor: '#f8f8f8',
-      },
-      loginButton: {
-        width: '100%',
-        height: 50,
-        backgroundColor: '#4CAF50',
-        borderRadius: 8,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 20,
-      },
-      loginButtonText: {
-        color: '#fff',
-        fontSize: 18,
-        fontWeight: 'bold',
-      },
-      signupText: {
-        marginTop: 20,
-        color: '#4CAF50',
-        fontSize: 16,
-      },
-      errorText: {
-        color: '#f44336',
-        fontSize: 14,
-        marginTop: 5,
-      },
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  logo: {
+    width: 150,
+    height: 150,
+    resizeMode: 'contain',
+    marginBottom: 20,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 30,
+  },
+  input: {
+    width: '100%',
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingHorizontal: 15,
+    fontSize: 16,
+    marginBottom: 15,
+  },
+  loginButton: {
+    width: '100%',
+    height: 50,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  loginButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  signupText: {
+    marginTop: 20,
+    fontSize: 16,
+  },
+  errorText: {
+    fontSize: 14,
+    marginTop: -10,
+    marginBottom: 10,
+  },
+  themeToggle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  themeText: {
+    marginRight: 10,
+    fontSize: 16,
+  },
 });
 
 export default SignUp;

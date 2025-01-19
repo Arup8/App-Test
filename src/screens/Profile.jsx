@@ -6,45 +6,63 @@ import {
   StyleSheet,
   ScrollView,
   Image,
+  Switch,
 } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useSelector } from 'react-redux';
 
 const Profile = ({ navigation }) => {
+  const { colors, isDarkMode, toggleTheme } = useTheme();
+  const translations = useSelector(state => state.language.translations);
+
+  const renderMenuItem = (icon, text, onPress, showToggle = false) => (
+    <TouchableOpacity 
+      style={[styles.menuItem, { borderBottomColor: colors.border }]}
+      onPress={onPress}>
+      <View style={styles.menuItemLeft}>
+        <Icon name={icon} size={24} color={colors.text} style={styles.menuIcon} />
+        <Text style={[styles.menuItemText, { color: colors.text }]}>{text}</Text>
+      </View>
+      {showToggle ? (
+        <Switch
+          value={isDarkMode}
+          onValueChange={toggleTheme}
+          trackColor={{ false: '#767577', true: colors.primary }}
+          thumbColor={isDarkMode ? colors.cardBackground : '#f4f3f4'}
+        />
+      ) : (
+        <Icon name="chevron-right" size={24} color={colors.text} />
+      )}
+    </TouchableOpacity>
+  );
+
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.cardBackground }]}>
         <Image
           source={require('../assets/avatar-placeholder.png')}
           style={styles.avatar}
         />
-        <Text style={styles.name}>John Doe</Text>
-        <Text style={styles.phone}>+91 98765 43210</Text>
+        <Text style={[styles.name, { color: colors.text }]}>John Doe</Text>
+        <Text style={[styles.phone, { color: colors.text }]}>+91 98765 43210</Text>
       </View>
 
-      <View style={styles.section}>
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemText}>Edit Profile</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemText}>Change Language</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemText}>My Addresses</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemText}>Payment Methods</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.menuItem}>
-          <Text style={styles.menuItemText}>Customer Support</Text>
-        </TouchableOpacity>
+      <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
+        {renderMenuItem('account-edit', `${translations.editProfile}`)}
+        {renderMenuItem('theme-light-dark', `${translations.darkMode}`, null, true)}
+        {renderMenuItem('translate', `${translations.changeLanguage}`)}
+        {renderMenuItem('map-marker', `${translations.myAddresses}`)}
+        {renderMenuItem('credit-card', `${translations.paymentMethods}`)}
+        {renderMenuItem('help-circle', `${translations.customerSupport}`)}
         
         <TouchableOpacity 
-          style={[styles.menuItem, styles.logoutButton]}
+          style={[styles.menuItem, styles.logoutButton, { backgroundColor: colors.error }]}
           onPress={() => navigation.navigate('Login')}>
-          <Text style={[styles.menuItemText, styles.logoutText]}>Logout</Text>
+          <View style={styles.menuItemLeft}>
+            <Icon name="logout" size={24} color="#fff" style={styles.menuIcon} />
+            <Text style={styles.logoutText}>{translations.logout}</Text>
+          </View>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -52,60 +70,60 @@ const Profile = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-      },
-      header: {
-        backgroundColor: '#4CAF50',
-        padding: 20,
-        alignItems: 'center',
-        paddingTop: 40,
-      },
-      avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
-        marginBottom: 15,
-        borderWidth: 3,
-        borderColor: '#fff',
-      },
-      name: {
-        fontSize: 24,
-        color: '#fff',
-        fontWeight: 'bold',
-        marginBottom: 5,
-      },
-      phone: {
-        fontSize: 16,
-        color: '#fff',
-        opacity: 0.9,
-      },
-      section: {
-        backgroundColor: '#fff',
-        marginTop: 20,
-        paddingHorizontal: 16,
-      },
-      menuItem: {
-        paddingVertical: 16,
-        borderBottomWidth: 1,
-        borderBottomColor: '#eee',
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      menuItemText: {
-        fontSize: 16,
-        color: '#333',
-        flex: 1,
-      },
-      logoutButton: {
-        marginTop: 20,
-        borderBottomWidth: 0,
-      },
-      logoutText: {
-        color: '#f44336',
-        fontWeight: '500',
-      },
+  container: {
+    flex: 1,
+  },
+  header: {
+    padding: 20,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 16,
+  },
+  name: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  phone: {
+    fontSize: 16,
+  },
+  section: {
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    overflow: 'hidden',
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderBottomWidth: 1,
+    justifyContent: 'space-between',
+  },
+  menuItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuIcon: {
+    marginRight: 12,
+  },
+  menuItemText: {
+    fontSize: 16,
+  },
+  logoutButton: {
+    justifyContent: 'flex-start',
+    borderBottomWidth: 0,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default Profile;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,8 +8,28 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProductList = ({ navigation }) => {
+  const { colors, isDarkMode, toggleTheme } = useTheme();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity 
+          onPress={toggleTheme}
+          style={styles.themeToggle}>
+          <Icon 
+            name={isDarkMode ? 'weather-sunny' : 'weather-night'} 
+            size={24} 
+            color={colors.text}
+          />
+        </TouchableOpacity>
+      ),
+    });
+  }, [navigation, isDarkMode, colors.text]);
+
   const products = [
     {
       id: '1',
@@ -32,27 +52,30 @@ const ProductList = ({ navigation }) => {
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.productCard}
+      style={[styles.productCard, { 
+        backgroundColor: colors.cardBackground || colors.background,
+        borderColor: colors.border
+      }]}
       onPress={() => navigation.navigate('ProductDetail', { product: item })}>
       <Image
         source={{ uri: item.image }}
         style={styles.productImage}
       />
       <View style={styles.productInfo}>
-        <Text style={styles.productName}>{item.name}</Text>
-        <Text style={styles.farmerName}>by {item.farmer}</Text>
-        <Text style={styles.price}>{item.price}</Text>
+        <Text style={[styles.productName, { color: colors.text }]}>{item.name}</Text>
+        <Text style={[styles.farmerName, { color: colors.text }]}>by {item.farmer}</Text>
+        <Text style={[styles.price, { color: colors.primary }]}>{item.price}</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
         data={products}
         renderItem={renderItem}
         keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContainer}
+        contentContainerStyle={styles.productList}
       />
     </SafeAreaView>
   );
@@ -61,22 +84,28 @@ const ProductList = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
-  listContainer: {
+  themeToggle: {
+    padding: 10,
+    marginRight: 10,
+  },
+  productList: {
     padding: 16,
   },
   productCard: {
-    backgroundColor: 'white',
-    borderRadius: 12,
-    marginBottom: 16,
     flexDirection: 'row',
     padding: 12,
-    elevation: 3,
+    marginBottom: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
   productImage: {
     width: 100,
@@ -90,19 +119,16 @@ const styles = StyleSheet.create({
   },
   productName: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#333',
+    fontWeight: 'bold',
+    marginBottom: 4,
   },
   farmerName: {
     fontSize: 14,
-    color: '#666',
-    marginTop: 4,
+    marginBottom: 4,
   },
   price: {
     fontSize: 16,
-    fontWeight: '700',
-    color: '#4CAF50',
-    marginTop: 8,
+    fontWeight: 'bold',
   },
 });
 

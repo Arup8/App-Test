@@ -7,38 +7,40 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
 
 const ProductDetail = ({ route, navigation }) => {
   const { product } = route.params;
+  const { colors } = useTheme();
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
       <Image
         source={{ uri: product.image }}
         style={styles.image}
       />
-      <View style={styles.contentContainer}>
-        <Text style={styles.title}>{product.name}</Text>
-        <Text style={styles.farmer}>Sold by {product.farmer}</Text>
+      <View style={[styles.contentContainer, { backgroundColor: colors.background }]}>
+        <Text style={[styles.title, { color: colors.text }]}>{product.name}</Text>
+        <Text style={[styles.farmer, { color: colors.text }]}>Sold by {product.farmer}</Text>
         
         <View style={styles.priceContainer}>
           <View>
-            <Text style={styles.priceLabel}>Market Price</Text>
-            <Text style={styles.price}>{product.price}</Text>
+            <Text style={[styles.priceLabel, { color: colors.text }]}>Market Price</Text>
+            <Text style={[styles.price, { color: colors.primary }]}>{product.price}</Text>
           </View>
           <View>
-            <Text style={styles.priceLabel}>Base Price</Text>
-            <Text style={styles.basePrice}>{product.basePrice}</Text>
+            <Text style={[styles.priceLabel, { color: colors.text }]}>Base Price</Text>
+            <Text style={[styles.basePrice, { color: colors.primary }]}>{product.basePrice}</Text>
           </View>
         </View>
 
         <TouchableOpacity
-          style={styles.negotiateButton}
-          onPress={() => navigation.navigate('Negotiation', { product })}>
+          style={[styles.negotiateButton, { backgroundColor: colors.primary }]}
+          onPress={() => navigation.navigate('NegotiationScreen', { product })}>
           <Text style={styles.negotiateButtonText}>Negotiate Price</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.buyButton}>
+        <TouchableOpacity style={[styles.buyButton, { backgroundColor: colors.primary }]}>
           <Text style={styles.buyButtonText}>Buy Now</Text>
         </TouchableOpacity>
       </View>
@@ -49,68 +51,63 @@ const ProductDetail = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   image: {
     width: '100%',
     height: 300,
+    resizeMode: 'cover',
   },
   contentContainer: {
     padding: 16,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: -20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    marginBottom: 8,
   },
   farmer: {
     fontSize: 16,
-    color: '#666',
-    marginTop: 8,
+    marginBottom: 16,
   },
   priceContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 24,
     marginBottom: 24,
-    paddingHorizontal: 16,
   },
   priceLabel: {
     fontSize: 14,
-    color: '#666',
     marginBottom: 4,
   },
   price: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#4CAF50',
   },
   basePrice: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FF9800',
   },
   negotiateButton: {
-    backgroundColor: '#FF9800',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
     marginBottom: 12,
   },
   negotiateButtonText: {
-    color: 'white',
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 18,
     fontWeight: 'bold',
   },
   buyButton: {
-    backgroundColor: '#4CAF50',
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
   },
   buyButtonText: {
-    color: 'white',
-    fontSize: 16,
+    color: '#fff',
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

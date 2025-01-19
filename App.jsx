@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Provider } from 'react-redux';
+import { Provider, useDispatch, useSelector } from 'react-redux';
 import store from './src/store';
 import Login from './src/screens/auth/Login';
 import SignUp from './src/screens/auth/SignUp';
@@ -14,35 +14,70 @@ import Profile from './src/screens/Profile';
 import Orders from './src/screens/Orders';
 import Cart from './src/screens/Cart';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useSelector } from 'react-redux';
-import { View } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { ThemeProvider, useTheme } from './src/context/ThemeContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { setLanguage } from './src/store/slices/languageSlice';
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const MainTabs = () => {
   const cartItems = useSelector(state => state.cart.items);
   const translations = useSelector(state => state.language.translations);
+  const { colors, isDarkMode } = useTheme();
 
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarStyle: {
-          backgroundColor: '#fff',
+        tabBarStyle: { 
+          backgroundColor: colors.cardBackground,
+          borderTopColor: colors.border,
           borderTopWidth: 1,
-          borderTopColor: '#e0e0e0',
           height: 60,
-          paddingBottom: 8,
+          paddingBottom: 5,
+          paddingTop: 5,
+          elevation: isDarkMode ? 0 : 8,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: -3 },
+          shadowOpacity: 0.1,
+          shadowRadius: 4,
         },
-        tabBarActiveTintColor: '#4CAF50',
-        tabBarInactiveTintColor: '#757575',
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.text,
+        headerStyle: { 
+          backgroundColor: colors.cardBackground,
+          elevation: isDarkMode ? 0 : 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+        },
+        headerTintColor: colors.text,
+        headerTitleStyle: { 
+          fontWeight: 'bold',
+          fontSize: 18,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontWeight: '500',
+          marginBottom: 3,
+        },
       }}>
       <Tab.Screen
         name="Home"
         component={ProductList}
         options={{
           title: translations?.home || 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="home" color={color} size={size} />
+          tabBarLabel: translations?.home || 'Home',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.tabIconContainer}>
+              <Icon 
+                name={focused ? "home" : "home-outline"} 
+                size={24} 
+                color={color} 
+              />
+            </View>
           ),
         }}
       />
@@ -51,8 +86,15 @@ const MainTabs = () => {
         component={Orders}
         options={{
           title: translations?.orders || 'Orders',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="clipboard-list" color={color} size={size} />
+          tabBarLabel: translations?.orders || 'Orders',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.tabIconContainer}>
+              <Icon 
+                name={focused ? "clipboard-list" : "clipboard-list-outline"} 
+                size={24} 
+                color={color} 
+              />
+            </View>
           ),
         }}
       />
@@ -61,11 +103,16 @@ const MainTabs = () => {
         component={Cart}
         options={{
           title: translations?.cart || 'Cart',
-          tabBarIcon: ({ color, size }) => (
-            <View>
-              <Icon name="cart" color={color} size={size} />
+          tabBarLabel: translations?.cart || 'Cart',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.tabIconContainer}>
+              <Icon 
+                name={focused ? "cart" : "cart-outline"} 
+                size={24} 
+                color={color} 
+              />
               {cartItems.length > 0 && (
-                <View style={styles.badge}>
+                <View style={[styles.badge, { backgroundColor: colors.error }]}>
                   <Text style={styles.badgeText}>{cartItems.length}</Text>
                 </View>
               )}
@@ -78,8 +125,15 @@ const MainTabs = () => {
         component={Profile}
         options={{
           title: translations?.profile || 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Icon name="account" color={color} size={size} />
+          tabBarLabel: translations?.profile || 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <View style={styles.tabIconContainer}>
+              <Icon 
+                name={focused ? "account" : "account-outline"} 
+                size={24} 
+                color={color} 
+              />
+            </View>
           ),
         }}
       />
@@ -87,24 +141,125 @@ const MainTabs = () => {
   );
 };
 
-const App = () => (
-  <Provider store={store}>
+const AppNavigator = () => {
+  const { colors, isDarkMode } = useTheme();
+  
+  return (
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: { 
+          backgroundColor: colors.cardBackground,
+          elevation: isDarkMode ? 0 : 4,
+          shadowColor: '#000',
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.1,
+          shadowRadius: 3,
+        },
+        headerTintColor: colors.text,
+        headerTitleStyle: { 
+          fontWeight: 'bold',
+          fontSize: 18,
+        },
+      }}>
+      <Stack.Screen 
+        name="LanguageSelect" 
+        component={LanguageSelect} 
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="Login" 
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="SignUp" 
+        component={SignUp}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="MainTabs" 
+        component={MainTabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen 
+        name="ProductDetail" 
+        component={ProductDetail}
+      />
+      <Stack.Screen 
+        name="NegotiationScreen" 
+        component={NegotiationScreen}
+        options={{ title: 'Negotiate Price' }}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const AppInitializer = () => {
+  const [isLoading, setIsLoading] = React.useState(true);
+  const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    const initializeApp = async () => {
+      try {
+        const savedLanguage = await AsyncStorage.getItem('selectedLanguage');
+        if (savedLanguage) {
+          dispatch(setLanguage(savedLanguage));
+        }
+      } catch (error) {
+        console.error('Error loading language preference:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    initializeApp();
+  }, [dispatch]);
+
+  if (isLoading) {
+    return null; // Or a loading screen component
+  }
+
+  return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerStyle: { backgroundColor: '#4CAF50' },
-          headerTintColor: '#fff',
-          headerTitleStyle: { fontWeight: 'bold' },
-        }}>
-        <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-        <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
-        <Stack.Screen name="LanguageSelect" component={LanguageSelect} options={{ headerShown: false }} />
-        <Stack.Screen name="MainTabs" component={MainTabs} options={{ headerShown: false }} />
-        <Stack.Screen name="ProductDetail" component={ProductDetail} />
-        <Stack.Screen name="Negotiation" component={NegotiationScreen} />
-      </Stack.Navigator>
+      <AppNavigator />
     </NavigationContainer>
-  </Provider>
-);
+  );
+};
+
+const App = () => {
+  return (
+    <Provider store={store}>
+      <ThemeProvider>
+        <AppInitializer />
+      </ThemeProvider>
+    </Provider>
+  );
+};
+
+const styles = StyleSheet.create({
+  tabIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 32,
+    height: 32,
+  },
+  badge: {
+    position: 'absolute',
+    right: -8,
+    top: -5,
+    backgroundColor: '#f44336',
+    borderRadius: 10,
+    minWidth: 18,
+    height: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 4,
+  },
+  badgeText: {
+    color: '#fff',
+    fontSize: 10,
+    fontWeight: 'bold',
+  },
+});
 
 export default App;

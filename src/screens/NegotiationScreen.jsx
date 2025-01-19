@@ -7,11 +7,14 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+import { useSelector } from 'react-redux';
 
 const NegotiationScreen = ({ route }) => {
   const { product } = route.params;
   const [offerPrice, setOfferPrice] = useState('');
   const [negotiations, setNegotiations] = useState([]);
+  const { colors } = useTheme();
 
   const handleOffer = () => {
     const newNegotiation = {
@@ -24,8 +27,10 @@ const NegotiationScreen = ({ route }) => {
     setOfferPrice('');
   };
 
+  const translations = useSelector((state) => state.language.translations);
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView style={styles.negotiationHistory}>
         {negotiations.map((nego) => (
           <View
@@ -33,27 +38,47 @@ const NegotiationScreen = ({ route }) => {
             style={[
               styles.negotiationItem,
               nego.type === 'customer'
-                ? styles.customerNegotiation
-                : styles.farmerNegotiation,
+                ? [styles.customerNegotiation, { backgroundColor: colors.primary }]
+                : [styles.farmerNegotiation, { backgroundColor: colors.cardBackground, borderColor: colors.border }],
             ]}>
-            <Text style={styles.negotiationPrice}>₹{nego.price}</Text>
-            <Text style={styles.negotiationTime}>{nego.timestamp}</Text>
+            <Text 
+              style={[
+                styles.negotiationPrice,
+                { color: nego.type === 'customer' ? '#fff' : colors.text }
+              ]}>
+              ₹{nego.price}
+            </Text>
+            <Text 
+              style={[
+                styles.negotiationTime,
+                { color: nego.type === 'customer' ? '#fff' : colors.text }
+              ]}>
+              {nego.timestamp}
+            </Text>
           </View>
         ))}
       </ScrollView>
 
-      <View style={styles.offerContainer}>
+      <View style={[styles.offerContainer, { 
+        backgroundColor: colors.cardBackground,
+        borderTopColor: colors.border
+      }]}>
         <TextInput
-          style={styles.input}
+          style={[styles.input, { 
+            backgroundColor: colors.inputBackground,
+            color: colors.inputText,
+            borderColor: colors.border
+          }]}
           value={offerPrice}
           onChangeText={setOfferPrice}
-          placeholder="Enter your offer price"
+          placeholder={translations.enterOfferPrice}
+          placeholderTextColor={colors.placeholderText}
           keyboardType="numeric"
         />
-        <TouchableOpacity
-          style={styles.offerButton}
+        <TouchableOpacity 
+          style={[styles.offerButton, { backgroundColor: colors.primary }]}
           onPress={handleOffer}>
-          <Text style={styles.offerButtonText}>Make Offer</Text>
+          <Text style={styles.offerButtonText}>{translations.makeOffer}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -63,57 +88,52 @@ const NegotiationScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
   },
   negotiationHistory: {
     flex: 1,
     padding: 16,
   },
   negotiationItem: {
-    padding: 16,
+    padding: 12,
     borderRadius: 8,
     marginBottom: 12,
+    maxWidth: '80%',
   },
   customerNegotiation: {
-    backgroundColor: '#E3F2FD',
-    marginLeft: 32,
+    alignSelf: 'flex-end',
   },
   farmerNegotiation: {
-    backgroundColor: '#F1F8E9',
-    marginRight: 32,
+    alignSelf: 'flex-start',
+    borderWidth: 1,
   },
   negotiationPrice: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    marginBottom: 4,
   },
   negotiationTime: {
     fontSize: 12,
-    color: '#666',
-    marginTop: 4,
   },
   offerContainer: {
     padding: 16,
-    backgroundColor: 'white',
     borderTopWidth: 1,
-    borderTopColor: '#eee',
   },
   input: {
+    height: 50,
     borderWidth: 1,
-    borderColor: '#ddd',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
+    paddingHorizontal: 16,
     fontSize: 16,
+    marginBottom: 12,
   },
   offerButton: {
-    backgroundColor: '#4CAF50',
-    padding: 16,
+    height: 50,
     borderRadius: 8,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   offerButtonText: {
-    color: 'white',
+    color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
   },

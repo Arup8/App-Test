@@ -6,8 +6,12 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import { useTheme } from '../context/ThemeContext';
+import { useSelector } from 'react-redux';
 
 const Orders = () => {
+  const { colors } = useTheme();
+  const translations = useSelector((state) => state.language.translations);
   const orders = [
     {
       id: '1',
@@ -20,25 +24,35 @@ const Orders = () => {
   ];
 
   const renderOrder = ({ item }) => (
-    <TouchableOpacity style={styles.orderCard}>
+    <TouchableOpacity 
+      style={[styles.orderCard, { 
+        backgroundColor: colors.cardBackground,
+        borderColor: colors.border
+      }]}>
       <View style={styles.orderHeader}>
-        <Text style={styles.orderId}>Order #{item.id}</Text>
-        <Text style={styles.orderDate}>{item.date}</Text>
+        <Text style={[styles.orderId, { color: colors.text }]}>{translations.orderNumber}{item.id}</Text>
+        <Text style={[styles.orderDate, { color: colors.text }]}>{item.date}</Text>
       </View>
       
       <View style={styles.orderDetails}>
-        <Text style={styles.orderItems}>{item.items.join(', ')}</Text>
-        <Text style={styles.orderTotal}>{item.total}</Text>
+        <Text style={[styles.orderItems, { color: colors.text }]}>
+          {item.items.join(', ')}
+        </Text>
+        <Text style={[styles.orderTotal, { color: colors.primary }]}>
+          {item.total}
+        </Text>
       </View>
       
-      <View style={styles.orderStatus}>
-        <Text style={styles.statusText}>{item.status}</Text>
+      <View style={[styles.orderStatus, { borderTopColor: colors.border }]}>
+        <Text style={[styles.statusText, { color: colors.primary }]}>
+          {item.status === 'Delivered' ? translations.delivered : item.status === 'Processing' ? translations.processing : translations.cancelled}
+        </Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <FlatList
         data={orders}
         renderItem={renderOrder}
@@ -50,63 +64,50 @@ const Orders = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f5f5f5',
-      },
-      ordersList: {
-        padding: 16,
-      },
-      orderCard: {
-        backgroundColor: '#fff',
-        borderRadius: 12,
-        padding: 16,
-        marginBottom: 16,
-        elevation: 2,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      orderHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 12,
-      },
-      orderId: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#333',
-      },
-      orderDate: {
-        fontSize: 14,
-        color: '#666',
-      },
-      orderDetails: {
-        marginBottom: 12,
-      },
-      orderItems: {
-        fontSize: 15,
-        color: '#444',
-        marginBottom: 8,
-      },
-      orderTotal: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: '#4CAF50',
-      },
-      orderStatus: {
-        paddingVertical: 6,
-        paddingHorizontal: 12,
-        backgroundColor: '#E8F5E9',
-        borderRadius: 16,
-        alignSelf: 'flex-start',
-      },
-      statusText: {
-        color: '#4CAF50',
-        fontSize: 14,
-        fontWeight: '500',
-      },
+  container: {
+    flex: 1,
+  },
+  ordersList: {
+    padding: 16,
+  },
+  orderCard: {
+    borderRadius: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    overflow: 'hidden',
+  },
+  orderHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 12,
+  },
+  orderId: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  orderDate: {
+    fontSize: 14,
+  },
+  orderDetails: {
+    padding: 12,
+  },
+  orderItems: {
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  orderTotal: {
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  orderStatus: {
+    borderTopWidth: 1,
+    padding: 12,
+    alignItems: 'flex-end',
+  },
+  statusText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
 });
 
 export default Orders;
