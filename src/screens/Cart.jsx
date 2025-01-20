@@ -9,15 +9,16 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { updateQuantity, removeFromCart } from '../store/slices/cartSlice';
+import { selectCartItems, selectCartTotal } from '../store/selectors/cartSelectors';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../context/ThemeContext';
 import { formatCurrency, getPriceValue } from '../utils/currency';
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const cartItems = useSelector(state => state.cart.items);
+  const cartItems = useSelector(selectCartItems);
   const translations = useSelector(state => state.language.translations);
-  const total = useSelector(state => state.cart.total);
+  const total = useSelector(selectCartTotal);
   const { colors } = useTheme();
 
   const handleQuantityChange = (id, quantity) => {
@@ -34,7 +35,7 @@ const Cart = () => {
       borderColor: colors.border
     }]}>
       <Image
-        source={{ uri: item.image }}
+        source={{ uri: item.images[0] }}
         style={styles.itemImage}
       />
       

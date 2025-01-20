@@ -51,7 +51,7 @@ const Profile = ({ navigation }) => {
       <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
         {renderMenuItem('account-edit', `${translations.editProfile}`)}
         {renderMenuItem('theme-light-dark', `${translations.darkMode}`, null, true)}
-        {renderMenuItem('translate', `${translations.changeLanguage}`)}
+        {renderMenuItem('translate', `${translations.changeLanguage}`, () => navigation.navigate('LanguageSelect'))}
         {renderMenuItem('map-marker', `${translations.myAddresses}`)}
         {renderMenuItem('credit-card', `${translations.paymentMethods}`)}
         {renderMenuItem('help-circle', `${translations.customerSupport}`)}
