@@ -65,7 +65,7 @@ const MainTabs = () => {
         },
       }}>
       <Tab.Screen
-        name="Home"
+        name="HomeTab"
         component={ProductList}
         options={{
           title: translations?.home || 'Home',
@@ -99,7 +99,7 @@ const MainTabs = () => {
         }}
       />
       <Tab.Screen
-        name="Cart"
+        name="CartTab"
         component={Cart}
         options={{
           title: translations?.cart || 'Cart',
@@ -112,8 +112,10 @@ const MainTabs = () => {
                 color={color} 
               />
               {cartItems.length > 0 && (
-                <View style={[styles.badge, { backgroundColor: colors.error }]}>
-                  <Text style={styles.badgeText}>{cartItems.length}</Text>
+                <View style={[styles.badge, { backgroundColor: colors.primary }]}>
+                  <Text style={styles.badgeText}>
+                    {cartItems.reduce((total, item) => total + item.quantity, 0)}
+                  </Text>
                 </View>
               )}
             </View>

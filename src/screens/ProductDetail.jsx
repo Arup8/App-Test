@@ -8,12 +8,17 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToCart } from '../store/slices/cartSlice';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProductDetail = ({ route, navigation }) => {
   const { product } = route.params;
   const { colors } = useTheme();
+  const dispatch = useDispatch();
   const translations = useSelector((state) => state.language.translations);
+  const cartItems = useSelector((state) => state.cart.items);
+  const isInCart = cartItems.some(item => item.id === product.id);
 
   return (
     <ScrollView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -40,6 +45,23 @@ const ProductDetail = ({ route, navigation }) => {
           style={[styles.negotiateButton, { backgroundColor: colors.primary }]}
           onPress={() => navigation.navigate('NegotiationScreen', { product })}>
           <Text style={styles.negotiateButtonText}>{translations.startNegotiation}</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+          style={[styles.cartButton, { backgroundColor: colors.primary }]}
+          onPress={() => {
+            dispatch(addToCart(product));
+            navigation.navigate('MainTabs', { screen: 'CartTab' });
+          }}>
+          <Icon 
+            name={isInCart ? 'cart-check' : 'cart-plus'} 
+            size={24} 
+            color="#fff" 
+            style={styles.cartIcon}
+          />
+          <Text style={styles.cartButtonText}>
+            {isInCart ? translations.viewCart || 'View Cart' : translations.addToCart || 'Add to Cart'}
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={[styles.buyButton, { backgroundColor: colors.primary }]}>
@@ -98,6 +120,22 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   negotiateButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  cartButton: {
+    flexDirection: 'row',
+    padding: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  cartIcon: {
+    marginRight: 8,
+  },
+  cartButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',

@@ -10,9 +10,13 @@ import {
 } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToCart } from '../store/slices/cartSlice';
 
 const ProductList = ({ navigation }) => {
   const { colors, isDarkMode, toggleTheme } = useTheme();
+  const dispatch = useDispatch();
+  const cartItems = useSelector(state => state.cart.items);
 
   useEffect(() => {
     navigation.setOptions({
@@ -50,24 +54,39 @@ const ProductList = ({ navigation }) => {
     // Add more products
   ];
 
-  const renderItem = ({ item }) => (
-    <TouchableOpacity
-      style={[styles.productCard, { 
+  const renderItem = ({ item }) => {
+    const isInCart = cartItems.some(cartItem => cartItem.id === item.id);
+    
+    return (
+      <View style={[styles.productCard, { 
         backgroundColor: colors.cardBackground || colors.background,
         borderColor: colors.border
-      }]}
-      onPress={() => navigation.navigate('ProductDetail', { product: item })}>
-      <Image
-        source={{ uri: item.image }}
-        style={styles.productImage}
-      />
-      <View style={styles.productInfo}>
-        <Text style={[styles.productName, { color: colors.text }]}>{item.name}</Text>
-        <Text style={[styles.farmerName, { color: colors.text }]}>by {item.farmer}</Text>
-        <Text style={[styles.price, { color: colors.primary }]}>{item.price}</Text>
+      }]}>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('ProductDetail', { product: item })}>
+          <Image
+            source={{ uri: item.image }}
+            style={styles.productImage}
+          />
+          <View style={styles.productInfo}>
+            <Text style={[styles.productName, { color: colors.text }]}>{item.name}</Text>
+            <Text style={[styles.farmerName, { color: colors.text }]}>by {item.farmer}</Text>
+            <Text style={[styles.price, { color: colors.primary }]}>{item.price}</Text>
+          </View>
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={[styles.cartButton, { backgroundColor: isInCart ? colors.primary : colors.background }]}
+          onPress={() => dispatch(addToCart(item))}>
+          <Icon 
+            name={isInCart ? 'cart-check' : 'cart-plus'} 
+            size={24} 
+            color={isInCart ? '#fff' : colors.primary} 
+          />
+        </TouchableOpacity>
       </View>
-    </TouchableOpacity>
-  );
+    );
+  };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -129,6 +148,24 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  cartButton: {
+    position: 'absolute',
+    right: 8,
+    bottom: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
   },
 });
 

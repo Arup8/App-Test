@@ -11,6 +11,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { updateQuantity, removeFromCart } from '../store/slices/cartSlice';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useTheme } from '../context/ThemeContext';
+import { formatCurrency, getPriceValue } from '../utils/currency';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const Cart = () => {
       <View style={styles.itemInfo}>
         <Text style={[styles.itemName, { color: colors.text }]}>{item.name}</Text>
         <Text style={[styles.itemPrice, { color: colors.primary }]}>
-          {formatCurrency(item.price * item.quantity)}
+          {formatCurrency(getPriceValue(item.price) * item.quantity)}
         </Text>
         
         <View style={styles.quantityContainer}>
@@ -98,7 +99,9 @@ const Cart = () => {
           {translations?.total || 'Total'}:
         </Text>
         <Text style={[styles.totalAmount, { color: colors.primary }]}>
-          {formatCurrency(total)}
+          {formatCurrency(cartItems.reduce((sum, item) => 
+            sum + (getPriceValue(item.price) * item.quantity), 0
+          ))}
         </Text>
         
         <TouchableOpacity 
