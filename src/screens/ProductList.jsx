@@ -122,7 +122,7 @@ const ProductList = ({ navigation }) => {
       description: 'Fresh tomatoes from the farm. Grown using organic methods.',
       price: '₹40/kg',
       basePrice: '₹35/kg',
-      images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7yhzz_SobhF0YnjnnuhJyCQPWNoYRpWYIcQ&s'],
+      images: ['https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7yhzz_SobhF0YnjnnuhJyCQPWNoYRpWYIcQ&s', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSz3TDPGZ8_fYnPkeMeltaMWVAT1p0KHMtXig&s', 'https://www.fitterfly.com/blog/wp-content/uploads/2024/07/Is-Tomato-Good-for-Diabetes-Benefits-Tips-and-Risks-1200x900.webp', 'https://media.istockphoto.com/id/1132371208/photo/three-ripe-tomatoes-on-green-branch.jpg?s=612x612&w=0&k=20&c=qVjDb5Tk3-UccV-E9gqvoz97PTsP1QmBftw27qA9kEo='],
       farmer: 'Ram Kumar',
       category: 'vegetables',
       subCategory: 'root',

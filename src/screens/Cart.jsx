@@ -106,7 +106,8 @@ const Cart = () => {
         </Text>
         
         <TouchableOpacity 
-          style={[styles.checkoutButton, { backgroundColor: colors.primary }]}>
+          style={[styles.checkoutButton, { backgroundColor: '#45B649' }]}>
+          <Icon name="cart-check" size={24} color="#fff" style={styles.checkoutIcon} />
           <Text style={styles.checkoutButtonText}>
             {translations?.checkout || 'Checkout'}
           </Text>
@@ -186,11 +187,18 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 8,
     alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    elevation: 3,
   },
   checkoutButtonText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: 'bold',
+    marginLeft: 8,
+  },
+  checkoutIcon: {
+    marginRight: 4,
   },
   emptyCart: {
     flex: 1,

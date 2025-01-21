@@ -8,9 +8,9 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-  Switch,
 } from 'react-native';
 import { useTheme } from '../../context/ThemeContext';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 const Login = ({ navigation }) => {
   const [phone, setPhone] = useState('');
@@ -21,6 +21,15 @@ const Login = ({ navigation }) => {
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container, { backgroundColor: colors.background }]}>
+      <TouchableOpacity 
+        style={styles.themeIcon} 
+        onPress={toggleTheme}>
+        <Icon 
+          name={isDarkMode ? 'moon' : 'sunny'} 
+          size={24} 
+          color={colors.text} 
+        />
+      </TouchableOpacity>
       <View style={styles.content}>
         <Image
           source={require('../../assets/logo.png')}
@@ -29,16 +38,6 @@ const Login = ({ navigation }) => {
         
         <Text style={[styles.title, { color: colors.text }]}>Welcome Back</Text>
 
-        <View style={styles.themeToggle}>
-          <Text style={[styles.themeText, { color: colors.text }]}>Dark Mode</Text>
-          <Switch
-            value={isDarkMode}
-            onValueChange={toggleTheme}
-            trackColor={{ false: "#767577", true: "#4CAF50" }}
-            thumbColor={isDarkMode ? "#fff" : "#f4f3f4"}
-          />
-        </View>
-        
         <TextInput
           style={[styles.input, { 
             backgroundColor: colors.inputBackground,
@@ -123,14 +122,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  themeToggle: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 20,
-  },
-  themeText: {
-    marginRight: 10,
-    fontSize: 16,
+  themeIcon: {
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    zIndex: 1,
+    padding: 8,
   },
   signupText: {
     marginTop: 20,
